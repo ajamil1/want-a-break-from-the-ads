@@ -18,6 +18,14 @@
     
     //console.log(tracks)
 
+    async function playTrack(name: string, id: string) {
+        selectedTrack.name = name
+        selectedTrack.id = id
+        played_tracks = []
+        await player.loadVideoById(selectedTrack.id);
+
+    }
+
     async function nextTrack() {
         let x = Math.floor(Math.random() * tracks.length);
         for (let i = 0; i <= played_tracks.length-1; i++) {
@@ -42,7 +50,7 @@
     let title = data.title
     let id = ""
     let form
-    let paused = false
+    let paused = true
     let playerState = null
     //console.log(id)
 
@@ -124,69 +132,18 @@
     );
     </script>
 
+    
+
 
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-scroll overflow-x-hidden">
-    {#if playlists == undefined}
-        <p class="text-neutral-300 text-6xl mx-2 font-bold mb-12">Want a break from the ads?</p>
-        <form method="POST" action="?/loginSpotify">
-            <input type="hidden" name="state" value={state} />
-            <button type="submit" class="p-3 rounded-3xl border border-emerald-500 bg-neutral-900 font-medium text-neutral-500 text-emerald-500 hover:text-neutral-300 hover:bg-emerald-500 duration-150 ">
-                <p>Login to Spotify</p>
-            </button>
-        </form>
-    {:else if spotify_tracks == undefined}
-    <form method="POST" action="?/getPlaylistTracks">
-        <input type="hidden" name="playlistID" value={playlistID}>
-        <input type="hidden" name="playlistImage" value={image}>
-        <input type="hidden" name="playlistName" value={name}>
-        <input type="hidden" name="playlistDescription" value={description}>
-        <input type="hidden" name="playlistTrackTotal" value={track_total}>
-        {#each playlists as playlist}
-        
-        <div class= "flex flex-row gap-3 place-content-start text-right mx-5 bg-neutral-900 my-5 rounded-lg duration-300 shadow-xl hover:bg-neutral-700">
-            <button type="submit" on:click={() => setSelectedPlaylist(playlist)} class="flex flex-row items-center gap-1 w-full ">
-                <img src ={playlist.images[0].url} class="h-24 w-24 rounded-l-lg "/>
-                <div class="flex flex-col text-left  mx-2 w-48 truncate text-ellipsis">       
-                    {#if playlist.name == ""} <p class="text-neutral-300 text-lg font-bold">Unnamed Playlist</p>
-                    {:else} <p class="text-neutral-300 text-lg font-bold ">{playlist.name}</p>
-                    {/if}
-                    <p class="text-neutral-400 mr-5 ">{playlist.description}</p>
-                    <p class="text-neutral-400 mr-5 ">{playlist.tracks.total} tracks</p>
-                </div>
-            </button>
-        </div>
-        {/each}
-    </form>
     
-    {:else if spotify_tracks != undefined}
-    <button class= "flex flex-row gap-3 place-content-start text-right mx-5 bg-neutral-900 rounded-lg duration-300 shadow-xl hover:bg-neutral-700 top-0 mt-5 z-20">
-        <button class="flex flex-row items-center top-0 mr-12 ">
-            <img src ={selectedPlaylist.image} class="h-24 w-24 rounded-l-lg "/>
-            <div class="flex flex-col text-left  mx-2 w-48 truncate text-ellipsis">       
-                {#if selectedPlaylist.name == ""} <p class="text-neutral-300 text-lg font-bold">Unnamed Playlist</p>
-                {:else} <p class="text-neutral-300 text-lg font-bold ">{selectedPlaylist.name}</p>
-                {/if}
-                <p class="text-neutral-400 mr-5 ">{selectedPlaylist.description}</p>
-                <p class="text-neutral-400 mr-5 ">{selectedPlaylist.track_total} tracks</p>
-            </div>
-        </button>
-    </button>
-    <div class="fixed bottom-0 flex flex-col z-20 w-full">
-        <!-- <form bind:this={form} method="POST" action="?/getPlaylistTracks">
-            <input type="hidden" name="query" value={selectedTrack}>
-            <input type="hidden" name="tracks" value={tracks}>
-            <button type="submit" action="?/getYoutubeVideo" class="text-emerald-300 text-2xl bg-emerald-900 px-3 py-2 hover:border-neutral-500 border border-black hover:text-green-400 duration-150 w-full">Start Listening</button>
-        </form> -->
-        
-        <button on:click={() => spotify_tracks = undefined} class="text-rose-300 text-2xl bg-rose-900 px-3 py-2 hover:border-neutral-500 border border-black hover:text-neutral-400 duration-150 w-full">Back to Playlists</button>
-    </div>
-    
-    <div class="z-0 bg-black pb-40 pt-12 flex flex-col items-center"> 
-        <div id="player" class="text-neutral-300 px-12 w-full h-96 pt-12   pointer-events-none">
+    <div class="z-0 bg-black pb-96 pt-24 flex flex-col items-center"> 
+        <div id="player" class="text-neutral-300 px-12 w-full h-96 pt-12 pointer-events-none">
         </div>
         {#if selectedTrack != undefined}
         <p class="text-neutral-300 text-lg mx-2 font-bold mb-4">{selectedTrack.name}</p>
+       
         {/if}
         <div class="flex flex-row  text-neutral-300 justify-center gap-2 mb-4">
             <button on:click={() => pauseOrPlay() }>{paused ? "" : ""}
@@ -213,22 +170,23 @@
         
     </div>
     
-        {#each spotify_tracks as track}
+    {#if tracks != undefined}
+    {#each tracks as track}
         
-        <div class= "flex flex-row gap-3 place-content-start text-right mx-5 bg-neutral-900 my-1 rounded-sm my-5 duration-300 shadow-xl hover:bg-neutral-700">
-            <input type="hidden" name="query" value={selectedTrack}>
-            <input type="hidden" name="tracks" value={tracks}>
-            <button class="flex flex-row items-center gap-1 w-full ">              
-                <div class="flex flex-col text-left  mx-2 w-screen truncate text-ellipsis">       
-                    <p class="text-neutral-400 text-lg font-base font-mono">{track}</p>
-                    </div>
-                </button>
-            
-            </div>
-            
-        {/each}
-    
+    <div class= "flex flex-row gap-3 place-content-start text-right mx-5 bg-neutral-900 my-1 rounded-sm my-5 duration-300 shadow-xl hover:bg-neutral-700">
+        <input type="hidden" name="query" value={selectedTrack}>
+        <input type="hidden" name="tracks" value={tracks}>
+        <button on:click={() => playTrack(track.name, track.id)} class="flex flex-row items-center gap-1 w-full ">              
+            <div class="flex flex-col text-left  mx-2 w-screen truncate text-ellipsis">       
+                <p class="text-neutral-400 text-lg font-base font-mono">{track.name}</p>
+                </div>
+            </button>
+        
+        </div>
+        
+    {/each}
     {/if}
+       
 </div>
 
 

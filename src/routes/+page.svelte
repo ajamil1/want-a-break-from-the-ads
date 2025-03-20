@@ -170,7 +170,6 @@
 
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden"> 
-    <!-- <Login show={showPlaylists}/> -->
     
     <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4"> 
         <div class="flex flex-col gap-4 absolute bottom-0 z-30 py-5 bg-black">

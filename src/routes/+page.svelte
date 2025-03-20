@@ -217,7 +217,7 @@
     </div>
     <div class="h-11/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {videoVsTracks ? "opacity-0 pointer-events-none" : ""} "   >
         {#each tracks as track}    
-    <div class= "{track.name == currentlyPlaying ? "hue-rotate-[3rad]" : "hue-rotate-[1rad]"} {paused ? "hue-rotate-[3rad] saturate-0 opacity-60" : " hue-rotate-[1rad] opacity-100"} {buffering ? "hue-rotate-[4rad]" : ""} flex flex-row text-rose-400 transition-all duration-600 flex mx-3 my-3 py-3 px-4 rounded-full cursor-pointer brightness-150 bg-radial-[at_50%_100%] from-teal-700  to-neutral-950 to-%100 truncate transition-all duration-200  " >
+    <div class= "{track.name == currentlyPlaying ? "hue-rotate-[3rad]" : "hue-rotate-[1rad]"} {paused ? "hue-rotate-[3rad] saturate-0 opacity-60" : " hue-rotate-[1rad] opacity-100"} {buffering ? "hue-rotate-[4rad]" : ""} flex flex-row text-rose-400 transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-full cursor-pointer brightness-150 bg-radial-[at_50%_100%] from-teal-700  to-neutral-950 to-%100 truncate transition-all duration-200  " >
         <input type="hidden" name="query" value={selectedTrack}>
         <input type="hidden" name="tracks" value={tracks}>
         <button onclick={() => playTrack(track.name, track.id)} class="cursor-pointer flex flex-row items-center gap-1 w-full ">              

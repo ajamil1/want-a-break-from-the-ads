@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Login from '$lib/components/Login.svelte';
     import { onMount } from 'svelte';
+    import { enhance } from '$app/forms';
+    import { tick } from 'svelte';
     let { data } = $props();
 
     type track = {
@@ -10,7 +12,8 @@
     
     let playlists = data.playlists
     let showPlaylists = $state(false)
-    let tracks: track[] = data.tracks
+    let title = data.title
+    let tracks = $state(data.tracks)
     let played_tracks: number[] = []
     let spotify_tracks: string[] = data.spotify_tracks
     let selectedPlaylist = data.selectedPlaylist
@@ -18,8 +21,6 @@
     let buffering = $state(false)
     let videoVsTracks = $state(true)
     let playlistID: string
-    
-    //console.log(tracks)
 
     async function playTrack(name: string, id: string) {
         buffering = true
@@ -58,15 +59,13 @@
         name: "",
         id: "",
     })
-    let title = data.title
     let id = ""
     let form
     let paused = $state(true)
     let playerState = null
-    //console.log(id)
+
 
     function setSelectedPlaylist(playlist: any){
-        console.log(playlist)
         playlistID = playlist.id
         image = playlist.images[0].url
         description = playlist.description
@@ -147,16 +146,34 @@
     }
 
     function videoVsTracksToggle() {  
+        showPlaylists = false
         if (videoVsTracks == true) {videoVsTracks = false } 
         else {videoVsTracks = true}
+    }
+
+    function togglePlaylistModal() {
+        showPlaylists = !showPlaylists
+    }
+
+    async function handleResponse({result}) {
+        console.log(result.data)
+        if (result.status === 202) {
+            tracks =  [...result.data.tracks]
+            console.log(tracks)
+            window.location.reload()
+
+        }
+    }
+
+
+    function login() {
+        window.location.href = '/auth';
     }
 
 
     // Load the YouTube IFrame API when the component mounts
     onMount(() => {
            selectedTrack = tracks[Math.floor(Math.random() * tracks.length)];
-           console.log(tracks)
-           console.log(spotify_tracks)
             const script = document.createElement('script');
             script.src = "https://www.youtube.com/iframe_api";
             document.body.appendChild(script);
@@ -169,7 +186,33 @@
 
 
 
-<div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden"> 
+<div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
+    <button onclick={togglePlaylistModal} class=" z-50 absolute bg-neutral-950  border border-neutral-500 text-neutral-200 border-2 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
+        <p>Playlists</p>
+    </button>
+    
+    <div class="w-screen h-screen absolute  z-30 {!showPlaylists ? "hidden" : ""}">
+        <div class=" w-screen h-screen bg-opacity-50">
+            <div class="border w-1/2 h-1/2  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 bottom-0 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
+                {#if playlists.length == 0}
+                <button onclick={login} class="border rounded-full py-2 px-4 border-2 border-neutral-500 bg-red-500 test-neutral-300">
+                    Login with Google
+                </button>
+                {/if}
+                <div class="flex flex-col gap-3 my-3 overflow-scroll h-11/12">
+                    {#each playlists as playlist, i}
+                    <form action="?/setPlaylist" method="POST">
+                        <input class="hidden" id="playlist" name="playlist" value={playlist.id}/>
+                        <button type="submit" class="border bg-black rounded-full px-4 py-2">
+                            <p class="text-neutral-300">{playlist.snippet.title}</p>
+                        </button>
+                    </form>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    </div>
+    
     
     <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4"> 
         <div class="flex flex-col gap-4 absolute bottom-0 z-30 py-5 bg-black">

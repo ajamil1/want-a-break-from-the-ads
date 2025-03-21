@@ -11,7 +11,7 @@ export async function GET({ url, cookies }) {
         body: new URLSearchParams({
             client_id: "154213660126-gpm2mf8f8k3fibkp3jjfg1l92n4duge7.apps.googleusercontent.com",
             client_secret: "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",
-            redirect_uri: "http://localhost:4000/auth/callback",
+            redirect_uri: "http://musicplayersveltekit67dc52ea815af01fda919d93ln542wuj.nubo.onl/auth/callback",
             grant_type: 'authorization_code',
             code
         })

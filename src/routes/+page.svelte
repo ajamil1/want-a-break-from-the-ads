@@ -2,7 +2,6 @@
 	import Login from '$lib/components/Login.svelte';
     import { onMount } from 'svelte';
     import { enhance } from '$app/forms';
-    import { tick } from 'svelte';
     let { data } = $props();
 
     type track = {
@@ -156,12 +155,10 @@
     }
 
     async function handleResponse({result}) {
-        console.log(result.data)
-        if (result.status === 202) {
+        if (result.status === 200) {
             tracks =  [...result.data.tracks]
-            console.log(tracks)
-            window.location.reload()
-
+            showPlaylists = false
+            skipToEnd()
         }
     }
 
@@ -187,23 +184,19 @@
 
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
-    <button onclick={togglePlaylistModal} class=" z-50 absolute bg-neutral-950  border border-neutral-500 text-neutral-200 border-2 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
+    <button onclick={togglePlaylistModal} class=" {playlists.length == 0 ? "hidden" : ""} z-50 absolute bg-neutral-950  border border-neutral-500 text-neutral-200 border-2 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
         <p>Playlists</p>
     </button>
     
     <div class="w-screen h-screen absolute  z-30 {!showPlaylists ? "hidden" : ""}">
         <div class=" w-screen h-screen bg-opacity-50">
             <div class="border w-1/2 h-1/2  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 bottom-0 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
-                {#if playlists.length == 0}
-                <button onclick={login} class="border rounded-full py-2 px-4 border-2 border-neutral-500 bg-red-500 test-neutral-300">
-                    Login with Google
-                </button>
-                {/if}
+                
                 <div class="flex flex-col gap-3 my-3 overflow-scroll h-11/12">
                     {#each playlists as playlist, i}
-                    <form action="?/setPlaylist" method="POST">
+                    <form action="?/setPlaylist" method="POST"  use:enhance={() => handleResponse} data-sveltekit-reload>
                         <input class="hidden" id="playlist" name="playlist" value={playlist.id}/>
-                        <button type="submit" class="border bg-black rounded-full px-4 py-2">
+                        <button class="border bg-black rounded-full px-4 py-2">
                             <p class="text-neutral-300">{playlist.snippet.title}</p>
                         </button>
                     </form>
@@ -213,8 +206,15 @@
         </div>
     </div>
     
+    {#if playlists.length == 0}
+        <div class="absolute left-0 right-0 top-0 bottom-0 h-screen w-screen z-50" >
+            <button onclick={login} class="cursor-pointer hover:bg-neutral-300 hover:text-black transition-all h-fit max-w-32 mx-auto my-auto absolute left-0 right-0 top-0 bottom-0 border rounded-full py-4 px-2 text-xl border border-neutral-500 bg-neutral-950 text-neutral-300">
+                Login
+            </button>
+        </div>
+    {/if}
     
-    <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4"> 
+    <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4  {playlists.length == 0 ? "hidden" : ""}"> 
         <div class="flex flex-col gap-4 absolute bottom-0 z-30 py-5 bg-black">
             {#if selectedTrack != undefined}
             <p class="text-neutral-300 text-lg px-12 truncate font-base  z-40 bg-black w-screen font-sans">{selectedTrack.name}</p>
@@ -257,7 +257,7 @@
     {#if tracks != undefined}
     <div id="player" class="text-neutral-300 w-full pointer-events-none top-0 z-0 left-0 right-0 bg-black absolute px-12 w-screen h-1/2 bottom-0 my-auto overflow-hidden">
     </div>
-    <div class="h-11/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {videoVsTracks ? "opacity-0 pointer-events-none" : ""} "   >
+    <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {videoVsTracks ? "opacity-0 pointer-events-none" : ""} "   >
         {#each tracks as track}    
     <div class= "{track.name == currentlyPlaying ? "hue-rotate-[3rad]" : "hue-rotate-[1rad]"} {paused ? "hue-rotate-[3rad] saturate-0 opacity-60" : " hue-rotate-[1rad] opacity-100"} {buffering ? "hue-rotate-[4rad]" : ""} flex flex-row text-rose-400 transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-full cursor-pointer brightness-150 bg-radial-[at_50%_100%] from-teal-700  to-neutral-950 to-%100 truncate transition-all duration-200  " >
         <input type="hidden" name="query" value={selectedTrack}>

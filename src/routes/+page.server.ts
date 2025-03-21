@@ -96,6 +96,6 @@ let auth
     return {playlists, tracks, selectedPlaylist, title: playlists[0].snippet.title, id, auth};
 } catch (error) {
     console.log('Token verification failed:', error);
-    return null;
+    return {playlists, tracks, selectedPlaylist, title, id, auth};
   }
 }

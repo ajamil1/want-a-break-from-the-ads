@@ -83,10 +83,10 @@ export const actions = {
   }
 };
 
-export const load: Load = async ({ cookies }) => {
+export const load: Load = async ({ locals }) => {
 let auth
   try {
-      const accessToken = cookies.get('access_token');
+      const accessToken = locals.user.accessToken
       if (!accessToken) { auth = false }
       else { 
         auth = true

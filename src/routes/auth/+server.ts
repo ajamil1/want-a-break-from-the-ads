@@ -11,3 +11,4 @@ export async function GET({ url }) {
 
     return new Response(null, { status: 302, headers: { Location: authUrl.toString() } });
 }
+

@@ -1,5 +1,8 @@
 // import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI } from '$env/static/private';
+import { prisma } from '$lib/server/database';
 import { json, redirect } from '@sveltejs/kit';
+import { google } from 'googleapis';
+
 
 export async function GET({ url, cookies }) {
     const code = url.searchParams.get('code');
@@ -20,12 +23,67 @@ export async function GET({ url, cookies }) {
 
     if (tokenResponse.error) return json(tokenResponse, { status: 400 });
 
-    cookies.set('access_token', tokenResponse.access_token, {
-        httpOnly: true,
-        secure: true,
-        path: '/',
-        maxAge: tokenResponse.expires_in
-    });
+    
+    
 
-    throw redirect(302, '/');
+    const response = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
+        headers: {
+            Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+        });
+      
+        const userInfo = await response.json();
+        //console.log(userInfo.items[0]);
+        //await prisma.user.deleteMany({});
+
+        try {
+            const existingUser = await prisma.user.findUnique({
+                where: { id: userInfo.items[0].id },  // Check if a user with this id exists
+            });
+
+            if (!existingUser) {
+                console.log(`%c New User: ` + userInfo.items[0].id, `color: green`)
+                // Store user info in the database (You can store the access token here)
+                await prisma.user.create({
+                    data: {
+                        id: userInfo.items[0].id,
+                        accessToken: tokenResponse.access_token,
+                        maxAge: tokenResponse.expires_in
+                    }
+                });      
+            }
+            else 
+            {
+                console.log(`%c Existing User: ` + userInfo.items[0].id, `color: green`)
+                await prisma.user.upsert({
+                    where: { id: userInfo.items[0].id  },
+                    update: { accessToken: tokenResponse.access_token },
+                    create: {
+                        id: userInfo.items[0].id,
+                        accessToken: tokenResponse.access_token,
+                        maxAge: tokenResponse.expires_in
+                    }
+                });
+            }
+
+            
+            const users = await prisma.user.findMany();
+            console.log(users);
+
+            cookies.set('userId', userInfo.items[0].id, {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                maxAge: tokenResponse.expires_in
+            });
+
+            
+
+        } catch(e) { 
+            console.error('Error handling user:', e);
+        }
+   
+        
+
+        throw redirect(302, '/');
 }

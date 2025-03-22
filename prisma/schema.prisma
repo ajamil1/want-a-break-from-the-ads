@@ -6,7 +6,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = "prisma/dev.db"  // This creates the SQLite database file in the `prisma` folder
+  url      = "file:./prisma/dev.db"  // This creates the SQLite database file in the `prisma` folder
 }
 
 generator client {

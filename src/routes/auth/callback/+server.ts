@@ -1,8 +1,6 @@
 // import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI } from '$env/static/private';
 import { prisma } from '$lib/server/database';
 import { json, redirect } from '@sveltejs/kit';
-import { google } from 'googleapis';
-
 
 export async function GET({ url, cookies }) {
     const code = url.searchParams.get('code');

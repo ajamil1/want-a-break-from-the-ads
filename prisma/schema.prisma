@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:/tmp/dev.db"  // This creates the SQLite database file in the `prisma` folder
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:npg_z8Po0hrRsQlC@ep-square-haze-a8hgyvmt-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"  // This creates the SQLite database file in the `prisma` folder
 }
 
 generator client {

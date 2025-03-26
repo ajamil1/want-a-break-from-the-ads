@@ -15,6 +15,7 @@ export const handle: Handle = async ({ event, resolve, cookies }) => {
 
 export function getSession(event: { locals: { session: any } }) {
 
+    console.log(event.locals)
     return event.locals.session;
 }
 

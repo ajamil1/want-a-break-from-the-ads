@@ -9,10 +9,8 @@ type track = {
   name: string,
   id: string
 }
-let spotify_tracks: string[]
+
 let tracks: track[]
-let title: string = ""
-let id: string = ""
 let selectedPlaylist = {
   name: "",
   description: "",
@@ -81,17 +79,21 @@ export const actions = {
 
 export const load: Load = async ({ locals }) => {
 let auth
+let title
   try {
-      const accessToken = locals.user.accessToken
-      if (!accessToken) { auth = false }
-      else { 
-        auth = true
-        await getUserPlaylists(accessToken)
+        const name = locals.user.name
+        
+        const accessToken = locals.user.accessToken
+        if (!accessToken) { auth = false }
+        else { 
+          auth = true
+          await getUserPlaylists(accessToken)
+          title = playlists[0].snippet.title
       }
 
-    return {playlists, tracks, selectedPlaylist, title: playlists[0].snippet.title, id, auth};
+    return {playlists, tracks, selectedPlaylist, title, auth, name };
 } catch (error) {
     console.log('Token verification failed:', error);
-    return {playlists, tracks, selectedPlaylist, title, id, auth};
+    return {playlists, tracks, selectedPlaylist, title, auth};
   }
 }

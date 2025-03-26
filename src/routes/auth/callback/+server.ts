@@ -29,7 +29,7 @@ export async function GET({ url, cookies }) {
         });
       
         const userInfo = await response.json();
-        //console.log(userInfo.items[0]);
+        console.log(userInfo.items[0]);
         //await prisma.user.deleteMany({});
 
         try {
@@ -42,6 +42,7 @@ export async function GET({ url, cookies }) {
                 // Store user info in the database (You can store the access token here)
                 await prisma.user.create({
                     data: {
+                        name: userInfo.items[0].snippet.title,
                         id: userInfo.items[0].id,
                         accessToken: tokenResponse.access_token,
                         maxAge: tokenResponse.expires_in
@@ -55,6 +56,7 @@ export async function GET({ url, cookies }) {
                     where: { id: userInfo.items[0].id  },
                     update: { accessToken: tokenResponse.access_token },
                     create: {
+                        name: userInfo.items[0].snippet.title,
                         id: userInfo.items[0].id,
                         accessToken: tokenResponse.access_token,
                         maxAge: tokenResponse.expires_in
@@ -78,8 +80,6 @@ export async function GET({ url, cookies }) {
         } catch(e) { 
             console.error('Error handling user:', e);
         }
-   
-        
 
-        throw redirect(302, '/');
+        throw redirect(302, '/' + userInfo.items[0].id);
 }

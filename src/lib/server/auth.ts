@@ -9,7 +9,8 @@ export async function getTokenFromUser(userId: string) {
     });
 
     return {
-        accessToken: user.accessToken, 
-        maxAge: user.maxAge
+        name: user?.name,
+        accessToken: user?.accessToken, 
+        maxAge: user?.maxAge
     };
 }

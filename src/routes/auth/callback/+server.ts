@@ -22,9 +22,6 @@ export async function GET({ url, cookies }) {
 
     if (tokenResponse.error) return json(tokenResponse, { status: 400 });
 
-    
-    
-
     const response = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
         headers: {
             Authorization: `Bearer ${tokenResponse.access_token}`,

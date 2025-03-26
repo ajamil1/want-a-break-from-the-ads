@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "Ip" TEXT NOT NULL DEFAULT '';

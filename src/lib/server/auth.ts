@@ -8,8 +8,6 @@ export async function getTokenFromUser(userId: string) {
         where: { id: userId },
     });
 
-    console.log("USER: " + user)  
-
     return {
         accessToken: user.accessToken, 
         maxAge: user.maxAge

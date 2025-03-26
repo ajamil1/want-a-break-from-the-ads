@@ -3,7 +3,7 @@ import { getTokenFromUser } from '$lib/server/auth';
 
 export const handle: Handle = async ({ event, resolve, cookies }) => {
     const userId = event.cookies.get("userId");
-
+    
     if (userId) {
         event.locals.user = await getTokenFromUser(userId);
     } else {
@@ -14,6 +14,7 @@ export const handle: Handle = async ({ event, resolve, cookies }) => {
 };
 
 export function getSession(event: { locals: { session: any } }) {
+
     return event.locals.session;
 }
 

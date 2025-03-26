@@ -10,9 +10,9 @@ export async function GET({ url, cookies }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
-            client_id: "154213660126-gpm2mf8f8k3fibkp3jjfg1l92n4duge7.apps.googleusercontent.com",
-            client_secret: "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",
-            redirect_uri: "http://music67e3b2d9645615827de4a79dhkxyjlcp.nubo.onl/auth/callback",
+            client_id: process.env.YOUTUBE_CLIENT_ID as string,
+            client_secret: process.env.YOUTUBE_CLIENT_SECRET as string,
+            redirect_uri: process.env.YOUTUBE_REDIRECT_URI as string,
             //redirect_uri: "http://localhost:4000/auth/callback",
             grant_type: 'authorization_code',
             code

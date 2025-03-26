@@ -1,11 +1,7 @@
 
 import type { Load } from './$types';
-import { redirect } from "@sveltejs/kit";
 import { json } from '@sveltejs/kit';
-
 import dotenv from 'dotenv';
-import { access } from 'fs';
-
 
 dotenv.config();
 let playlists: any[] = [];

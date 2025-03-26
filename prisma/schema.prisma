@@ -6,7 +6,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:npg_z8Po0hrRsQlC@ep-square-haze-a8hgyvmt-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"  // This creates the SQLite database file in the `prisma` folder
+  url      = env("DATABASE_URL")
 }
 
 generator client {

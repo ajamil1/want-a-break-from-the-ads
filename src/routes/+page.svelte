@@ -253,7 +253,6 @@
     </div>
     </div>
     <div class=" h-full  overflow-hidden">
-        
     {#if tracks != undefined}
     <div id="player" class="text-neutral-300 w-full pointer-events-none top-0 z-0 left-0 right-0 bg-black absolute px-12 w-screen h-1/2 bottom-0 my-auto overflow-hidden">
     </div>

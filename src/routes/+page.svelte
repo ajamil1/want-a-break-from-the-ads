@@ -1,6 +1,7 @@
 <script lang="ts">
     let { data } = $props();
     let test = data.test
+    console.log(test)
 </script>
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">

@@ -1,4 +1,3 @@
-// import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI } from '$env/static/private';
 import { prisma } from '$lib/server/database';
 import { json, redirect } from '@sveltejs/kit';
 
@@ -66,7 +65,6 @@ export async function GET({ url, cookies }) {
 
             
             const users = await prisma.user.findMany();
-            console.log(users);
 
             cookies.set('userId', userInfo.items[0].id, {
                 httpOnly: true,

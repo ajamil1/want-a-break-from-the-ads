@@ -177,7 +177,9 @@
 
     // Load the YouTube IFrame API when the component mounts
     onMount(() => {
-           selectedTrack = tracks[Math.floor(Math.random() * tracks.length)];
+        console.log(tracks)
+            if (tracks.length == 0) { selectedTrack = tracks[0] } 
+            else {selectedTrack = tracks[Math.floor(Math.random() * tracks.length)]}
             const script = document.createElement('script');
             script.src = "https://www.youtube.com/iframe_api";
             document.body.appendChild(script);
@@ -205,15 +207,15 @@
         
     </div>
     
-    <div class="w-screen h-screen absolute duration-100 z-30 {!showPlaylists ? "pointer-events-none opacity-0" : "opacity-100"}">
+    <div class="w-screen h-screen absolute duration-100 bg-opacity-50 z-30 {!showPlaylists ? "pointer-events-none opacity-0" : "opacity-100"}">
         <div class=" w-screen h-screen bg-opacity-50">
-            <div class="border w-1/2 h-1/2  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 bottom-0 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
+            <div class="border w-11/12 mx-2 sm:w-1/2 h-1/2 mx-12  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 mt-12 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
                 
                 <div class="flex flex-col gap-3 my-3 overflow-scroll h-11/12">
                     {#each playlists as playlist, i}
                     <form action="?/setPlaylist" method="POST"  use:enhance={() => handleResponse} data-sveltekit-reload>
                         <input class="hidden" id="playlist" name="playlist" value={playlist.id}/>
-                        <button class="border cursor-pointer bg-black rounded-full px-4 py-2">
+                        <button class="border w-full ml-auto cursor-pointer bg-black rounded-full px-4 py-2">
                             <p class="text-neutral-300 truncate">{playlist.snippet.title}</p>
                         </button>
                     </form>

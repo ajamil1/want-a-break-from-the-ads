@@ -1,7 +1,6 @@
 import { prisma } from '$lib/server/database';
 import { json, redirect } from '@sveltejs/kit';
 
-
 export async function GET({ url, cookies }) {
     const code = url.searchParams.get('code');
     if (!code) return json({ error: 'Missing code' }, { status: 400 });
@@ -28,7 +27,6 @@ export async function GET({ url, cookies }) {
         });
       
         const userInfo = await response.json();
-        console.log(userInfo.items[0]);
         //await prisma.user.deleteMany({});
 
         try {

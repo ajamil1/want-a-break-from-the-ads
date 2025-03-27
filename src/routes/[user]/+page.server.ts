@@ -11,6 +11,8 @@ type track = {
   id: string
 }
 
+let selectedPlaylistIndex: any = null
+
 let tracks: track[]
 let selectedPlaylist = {
   name: "",
@@ -61,7 +63,8 @@ async function getYoutubeVideosIDs(playlist_id: string, accessToken: string) {
   }
 }
 
-async function getUserPlaylists(accessToken: string){
+async function getUserPlaylists(accessToken: string, index?: number){
+  if (!index) {index = 0}
   
   try {
     const response = await fetch('https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true', {
@@ -76,7 +79,8 @@ async function getUserPlaylists(accessToken: string){
   const data = await response.json();
 
   playlists = data.items
-  selectedPlaylist = playlists[0]
+  selectedPlaylist = playlists[index]
+  selectedPlaylistIndex = index
 
   await getYoutubeVideosIDs(selectedPlaylist.id, accessToken)
  }
@@ -93,9 +97,9 @@ export const actions = {
     });
     const accessToken: string = user?.accessToken
     const formData = await request.formData();
-    const playlist = formData.get('playlist');
-    await getYoutubeVideosIDs(playlist, accessToken)
-    return {tracks};
+    const index = formData.get('index');
+    await getUserPlaylists(accessToken, index)
+    return {tracks, selectedPlaylist};
   }
 };
 
@@ -116,7 +120,7 @@ const user = await prisma.user.findUnique({
           await getUserPlaylists(accessToken)
       }
 
-    return {playlists, tracks, selectedPlaylist, auth, name };
+    return {playlists, tracks, selectedPlaylistIndex, auth, name };
 } catch (error) {
     console.log('Token verification failed:', error);
     return {playlists, tracks, selectedPlaylist, title, auth};

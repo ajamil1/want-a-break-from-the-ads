@@ -9,19 +9,48 @@
         id: string
     }
 
-    let username = data.name
+    let username = data?.name?.split(" ")[0]
     
     let playlists = data.playlists
     let showPlaylists = $state(false)
     let title = data.title
     let tracks = $state(data.tracks)
     let played_tracks: number[] = []
+    let index = $state(0)
     let spotify_tracks: string[] = data.spotify_tracks
-    let selectedPlaylist = data.selectedPlaylist
+    let selectedPlaylist = $state(0)
     let currentlyPlaying = $state("")
     let buffering = $state(false)
     let videoVsTracks = $state(true)
     let playlistID: string
+
+    const State = Object.freeze({
+        Video: 0,
+        Tracklist: 1,
+        Playlists: 2,
+  });
+    let appStateName = $state("Video")
+    $effect(() => {selectedPlaylist = data.selectedPlaylist})
+
+    let appState = $state(State.Video)
+
+    function manageAppState(){
+        if (appState == 2) {appState = 0}
+        else {appState++}
+        switch(appState) {
+            case State.Video:
+                appStateName = "Video"
+                break;
+            case State.Tracklist:
+                appStateName = "Tracklist"
+                break;
+            case State.Playlists:
+                appStateName = "Playlists"
+                
+                break;
+        }
+        console.log(appState)
+    }   
 
     async function playTrack(name: string, id: string) {
         buffering = true
@@ -177,13 +206,14 @@
 
     // Load the YouTube IFrame API when the component mounts
     onMount(() => {
-        console.log(tracks)
             if (tracks.length == 0) { selectedTrack = tracks[0] } 
             else {selectedTrack = tracks[Math.floor(Math.random() * tracks.length)]}
             const script = document.createElement('script');
             script.src = "https://www.youtube.com/iframe_api";
             document.body.appendChild(script);
-            window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+            if (playlists.length != 0) {
+                window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+            }
         } 
     );
     </script>
@@ -193,21 +223,56 @@
 
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
-    <button onclick={togglePlaylistModal} class="z-50 absolute bg-neutral-950 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-50 border border-2 duration-1000 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
+    <!-- <button onclick={togglePlaylistModal} class=" {playlists.length != 0 ? "" : "hidden"} z-50 absolute bg-neutral-950 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-50 border border-2 duration-1000 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
         <p>Playlists</p>
-    </button>
+    </button> -->
 
-    <div class="top-0 left-0 m-4 flex flex-col justify-start items-left w-full">
-        <button onclick={toggleLogoutDropdown} class=" rounded-xl flex flex-col items-center z-50 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 duration-1000 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 m-4 cursor-pointer saturate-50">
-            <p><span class="mr-1"></span> {username}</p>
+    <div class="top-0 left-0 right-0 m-4 flex flex-col justify-center items-center w-full">
+        <button onclick={toggleLogoutDropdown} class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl flex flex-col items-center z-50 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
+            <p><span class="mr-1"></span> {username}'s Account</p>
             <a href="/" class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-10 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
                 <p>Logout</p>
             </a>
         </button>
         
     </div>
+
+    <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {appState != State.Playlists ? "opacity-0 pointer-events-none" : ""} "   >
+        {#each playlists as playlist, i}    
+        <form 
+        class= "
+        {selectedPlaylist == i ? "hue-rotate-[3rad]" : "hue-rotate-[1rad]"} 
+        {paused ? "hue-rotate-[3rad] saturate-0 opacity-60" : " hue-rotate-[1rad] opacity-100"} 
+        {buffering ? "hue-rotate-[4rad]" : ""} 
+        flex flex-row text-rose-400 transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-full cursor-pointer brightness-150 bg-radial-[at_50%_100%] from-teal-700  to-neutral-950 to-%100 truncate transition-all duration-200" 
+        action="?/setPlaylist" 
+        method="POST"  
+        use:enhance={() => handleResponse} 
+        data-sveltekit-reload>
+            <input class="hidden" id="playlist" name="playlist" value={playlist.id}/>
+            <input class="hidden" id="playlists" name="playlists" value={playlists}/>
+            <input class="hidden" id="index" name="index" value={i}/>
+            <button onclick={() => selectedPlaylist = i} class="cursor-pointer flex flex-row items-center gap-1 w-full ">              
+                <div class=" relative flex flex-row text-left w-screen truncate text-ellipsis cursor-pointer ">       
+                    <p class="text-neutral-400 text-lg font-base cursor-pointer w-10/12 truncate">{playlist.snippet.title}</p>
+                    {#if !paused}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="{selectedPlaylist == i ? "opacity-100" : "opacity-0"} duration-500 size-7 my-auto absolute right-0 top-0 bottom-0 text-neutral-400">
+                            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
+                            <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
+                        </svg>
+                    {:else}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="{selectedPlaylist == i ? "opacity-100" : "opacity-0"} duration-500 size-7 my-auto absolute right-0 top-0 bottom-0 text-neutral-400">
+                            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
+                        </svg>
+                    {/if}
+                </div>
+            </button>
+        </form>
+        
+    {/each}
+    </div>
     
-    <div class="w-screen h-screen absolute duration-100 bg-opacity-50 z-30 {!showPlaylists ? "pointer-events-none opacity-0" : "opacity-100"}">
+    <!-- <div class="w-screen h-screen absolute duration-100 bg-opacity-50 z-30 {appState != State.Playlists ? "pointer-events-none opacity-0" : "opacity-100"}">
         <div class=" w-screen h-screen bg-opacity-50">
             <div class="border w-11/12 mx-2 sm:w-1/2 h-1/2 mx-12  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 mt-12 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
                 
@@ -223,14 +288,17 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     
     {#if playlists.length == 0}
-        <div class="absolute left-0 right-0 top-0 bottom-0 h-screen w-screen z-50" >
-            <button onclick={login} class="cursor-pointer hover:bg-neutral-300 hover:text-black transition-all h-fit max-w-32 mx-auto my-auto absolute left-0 right-0 top-0 bottom-0 border rounded-full py-4 px-2 text-xl border border-neutral-500 bg-neutral-950 text-neutral-300">
-                Login
-            </button>
+        <div class="absolute left-0 right-0 top-0 bottom-0 h-screen w-screen z-10 text-neutral-300" >
+            <div class="cursor-default h-fit mx-auto my-auto absolute left-0 right-0 top-0 bottom-0 text-xl flex flex-col gap-5 px-12">
+                <p class="text-6xl font-bold mb-5">Whoops!</p>
+                <p class="text-2xl">Looks like you dont have any YouTube playlists on this account</p>
+                <p class="text-2xl">If you have a Spotify account, I would start <span><a href="https://www.tunemymusic.com/transfer/spotify-to-youtube" target="_blank" class="text-emerald-500 underline">here.</a></span></p>
+            </div>
         </div>
+       
     {/if}
     
     <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4  {playlists.length == 0 ? "hidden" : ""}"> 
@@ -257,8 +325,8 @@
                 {/if}
                 
             </button>
-            <button class=" w-19 rounded-lg px-2 h-8 mt-3 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-60 text-neutral-300 brightness-150 rounded-full bg-conic-180 duration-1000 from-neutral-950 via-rose-700 to-neutral-950 to-90% cursor-pointer" onclick={() => videoVsTracksToggle()}>
-                <p>{videoVsTracks == true ? "Video" : "Tracklist"}</p>
+            <button class=" w-19 rounded-lg px-2 h-8 mt-3 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-60 text-neutral-300 brightness-150 rounded-full bg-conic-180 duration-1000 from-neutral-950 via-rose-700 to-neutral-950 to-90% cursor-pointer" onclick={(manageAppState)}>
+                <p>{appStateName}</p>
             </button>
             <!-- svelte-ignore a11y_consider_explicit_label -->
             <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%]  duration-1000 from-teal-200 via-rose-400 to-black to-90%" onclick={() => skipToEnd()}>
@@ -275,7 +343,7 @@
     {#if tracks != undefined}
     <div id="player" class="text-neutral-300 w-full pointer-events-none top-0 z-0 left-0 right-0 bg-black absolute px-12 w-screen h-1/2 bottom-0 my-auto overflow-hidden">
     </div>
-    <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {videoVsTracks ? "opacity-0 pointer-events-none" : ""} "   >
+    <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {appState != State.Tracklist ? "opacity-0 pointer-events-none" : ""} "   >
         {#each tracks as track}    
     <div class= "{track.name == currentlyPlaying ? "hue-rotate-[3rad]" : "hue-rotate-[1rad]"} {paused ? "hue-rotate-[3rad] saturate-0 opacity-60" : " hue-rotate-[1rad] opacity-100"} {buffering ? "hue-rotate-[4rad]" : ""} flex flex-row text-rose-400 transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-full cursor-pointer brightness-150 bg-radial-[at_50%_100%] from-teal-700  to-neutral-950 to-%100 truncate transition-all duration-200  " >
         <input type="hidden" name="query" value={selectedTrack}>

@@ -17,7 +17,11 @@ export async function GET({ url, cookies }) {
         })
     }).then(res => res.json());
 
-    if (tokenResponse.error) return json(tokenResponse, { status: 400 });
+    if (tokenResponse.error) {
+        console.log(tokenResponse.error);
+        return json(tokenResponse, { status: 400 });
+    }
+        
 
     const response = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
         headers: {
@@ -26,6 +30,7 @@ export async function GET({ url, cookies }) {
         });
       
         const userInfo = await response.json();
+        console.log(userInfo)
 
         try {
             const existingUser = await prisma.user.findUnique({

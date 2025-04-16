@@ -4,7 +4,7 @@ import { json, redirect } from '@sveltejs/kit';
 export async function GET({ url, cookies }) {
     const code = url.searchParams.get('code');
     if (!code) {
-        throw redirect(302, '/error');
+        throw redirect(302, '/codeerror');
         //return json({ error: 'Missing code' }, { status: 400 });
     } 
 
@@ -22,7 +22,8 @@ export async function GET({ url, cookies }) {
 
     if (tokenResponse.error) {
         console.log(tokenResponse.error);
-        return json(tokenResponse, { status: 400 });
+        //return json(tokenResponse, { status: 400 })
+        throw redirect(302, '/tokenerror');
     }
         
 

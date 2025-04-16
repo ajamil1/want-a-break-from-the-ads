@@ -19,7 +19,8 @@ export async function GET({ url, cookies }) {
 
     if (tokenResponse.error) {
         console.log(tokenResponse.error);
-        return json(tokenResponse, { status: 400 });
+        throw redirect(302, '/err');
+        //return json(tokenResponse, { status: 400 });
     }
         
 
@@ -30,7 +31,6 @@ export async function GET({ url, cookies }) {
         });
       
         const userInfo = await response.json();
-        console.log(userInfo)
 
         try {
             const existingUser = await prisma.user.findUnique({

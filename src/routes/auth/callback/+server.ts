@@ -3,7 +3,10 @@ import { json, redirect } from '@sveltejs/kit';
 
 export async function GET({ url, cookies }) {
     const code = url.searchParams.get('code');
-    if (!code) return json({ error: 'Missing code' }, { status: 400 });
+    if (!code) {
+        throw redirect(302, '/error');
+        //return json({ error: 'Missing code' }, { status: 400 });
+    } 
 
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',

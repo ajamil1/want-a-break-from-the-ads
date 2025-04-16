@@ -110,7 +110,7 @@ export const load: Load = async ({ locals, url, cookies }) => {
   const cookie = cookies.get('userId');
   if (cookie != userID) {
     console.log("ID MISMATCH: " + cookie + " != " + userID);
-    return redirect(302, '/');
+    //return redirect(302, '/');
   }
   const user = await prisma.user.findUnique({
     where: { id: userID },  // Check if a user with this id exists

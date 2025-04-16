@@ -19,8 +19,7 @@ export async function GET({ url, cookies }) {
 
     if (tokenResponse.error) {
         console.log(tokenResponse.error);
-        throw redirect(302, '/err');
-        //return json(tokenResponse, { status: 400 });
+        return json(tokenResponse, { status: 400 });
     }
         
 

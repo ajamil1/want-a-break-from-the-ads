@@ -12,7 +12,6 @@ export async function GET({ url, cookies }) {
             client_id: process.env.YOUTUBE_CLIENT_ID as string,
             client_secret: process.env.YOUTUBE_CLIENT_SECRET as string,
             redirect_uri: process.env.YOUTUBE_REDIRECT_URI as string,
-            //redirect_uri: "http://localhost:4000/auth/callback",
             grant_type: 'authorization_code',
             code
         })
@@ -27,7 +26,6 @@ export async function GET({ url, cookies }) {
         });
       
         const userInfo = await response.json();
-        //await prisma.user.deleteMany({});
 
         try {
             const existingUser = await prisma.user.findUnique({
@@ -35,7 +33,7 @@ export async function GET({ url, cookies }) {
             });
 
             if (!existingUser) {
-                console.log(`%c New User: ` + userInfo.items[0].id, `color: green`)
+                console.log(`New User: ` + userInfo.items[0].id)
                 // Store user info in the database (You can store the access token here)
                 await prisma.user.create({
                     data: {
@@ -48,7 +46,7 @@ export async function GET({ url, cookies }) {
             }
             else 
             {
-                console.log(`%c Existing User: ` + userInfo.items[0].id, `color: green`)
+                console.log(`Existing User: ` + userInfo.items[0].id)
                 await prisma.user.upsert({
                     where: { id: userInfo.items[0].id  },
                     update: { accessToken: tokenResponse.access_token },
@@ -61,17 +59,12 @@ export async function GET({ url, cookies }) {
                 });
             }
 
-            
-            const users = await prisma.user.findMany();
-
             cookies.set('userId', userInfo.items[0].id, {
                 httpOnly: true,
                 secure: true,
                 path: '/',
                 maxAge: tokenResponse.expires_in
             });
-
-            
 
         } catch(e) { 
             console.error('Error handling user:', e);

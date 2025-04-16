@@ -1,7 +1,7 @@
 
 import type { Load } from './$types';
 import { prisma } from '$lib/server/database';
-import { json } from '@sveltejs/kit';
+import { json, redirect } from '@sveltejs/kit';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -103,12 +103,17 @@ export const actions = {
   }
 };
 
-export const load: Load = async ({ locals, url }) => {
-let auth
-let title
-const userID = url.pathname.split('/').slice(0).join('/').slice(1)
-const user = await prisma.user.findUnique({
-  where: { id: userID },  // Check if a user with this id exists
+export const load: Load = async ({ locals, url, cookies }) => {
+  let auth
+  let title
+  const userID = url.pathname.split('/').slice(0).join('/').slice(1)
+  const cookie = cookies.get('userId');
+  if (cookie != userID) {
+    console.log("ID MISMATCH: " + cookie + " != " + userID);
+    return redirect(302, '/');
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: userID },  // Check if a user with this id exists
 });
   try {
         const name = user?.name

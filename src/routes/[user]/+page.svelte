@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Login from '$lib/components/Login.svelte';
     import { onMount } from 'svelte';
     import { enhance } from '$app/forms';
     let { data } = $props();
@@ -49,7 +48,6 @@
                 
                 break;
         }
-        console.log(appState)
     }   
 
     async function playTrack(name: string, id: string) {
@@ -175,14 +173,9 @@
         }
     }
 
-    function videoVsTracksToggle() {  
-        showPlaylists = false
-        if (videoVsTracks == true) {videoVsTracks = false } 
-        else {videoVsTracks = true}
-    }
-
-    function togglePlaylistModal() {
-        showPlaylists = !showPlaylists
+    let carMode = $state(false)
+    function toggleCarMode() {
+        carMode = !carMode
     }
 
     async function handleResponse({result}) {
@@ -206,8 +199,8 @@
 
     // Load the YouTube IFrame API when the component mounts
     onMount(() => {
-            if (tracks.length == 0) { selectedTrack = tracks[0] } 
-            else {selectedTrack = tracks[Math.floor(Math.random() * tracks.length)]}
+        if (tracks.length == 0) { selectedTrack = tracks[0] } 
+        else {selectedTrack = tracks[Math.floor(Math.random() * tracks.length)]}
             const script = document.createElement('script');
             script.src = "https://www.youtube.com/iframe_api";
             document.body.appendChild(script);
@@ -223,18 +216,27 @@
 
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
-    <!-- <button onclick={togglePlaylistModal} class=" {playlists.length != 0 ? "" : "hidden"} z-50 absolute bg-neutral-950 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-50 border border-2 duration-1000 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 right-0 m-4 cursor-pointer">
-        <p>Playlists</p>
-    </button> -->
 
     <div class="top-0 left-0 right-0 m-4 flex flex-col justify-center items-center w-full">
         <button onclick={toggleLogoutDropdown} class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl flex flex-col items-center z-50 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
-            <p><span class="mr-1"></span> {username}'s Account</p>
-            <a href="/" class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-10 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
+            <p><span class="mr-1"></span>Settings</p>
+            <a href="/" class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-22.5 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
                 <p>Logout</p>
             </a>
         </button>
-        
+
+        <h2 class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl flex flex-col items-center z-40 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 border-black z-40 bg-black text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
+            <button onclick={toggleCarMode} class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-10 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
+                <div class="flex flex-row justify-center gap-3">
+                    <p>Car Mode: </p>
+                    <div class="flex flex-row gap-2 text-neutral-500">
+                        <p class:font-bold={carMode != false} class:text-neutral-100={carMode != false}>ON</p>
+                        <p>/</p>
+                        <p class:font-bold={carMode == false} class:text-neutral-100={carMode == false}>OFF</p>
+                    </div>
+                </div>
+            </button>
+        </h2> 
     </div>
 
     <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {appState != State.Playlists ? "opacity-0 pointer-events-none" : ""} "   >
@@ -272,24 +274,6 @@
     {/each}
     </div>
     
-    <!-- <div class="w-screen h-screen absolute duration-100 bg-opacity-50 z-30 {appState != State.Playlists ? "pointer-events-none opacity-0" : "opacity-100"}">
-        <div class=" w-screen h-screen bg-opacity-50">
-            <div class="border w-11/12 mx-2 sm:w-1/2 h-1/2 mx-12  bg-opacity-50 mx-auto my-auto border-neutral-500 top-0 mt-12 bg-neutral-950 absolute left-0 right-0 rounded-lg p-12">
-                
-                <div class="flex flex-col gap-3 my-3 overflow-scroll h-11/12">
-                    {#each playlists as playlist, i}
-                    <form action="?/setPlaylist" method="POST"  use:enhance={() => handleResponse} data-sveltekit-reload>
-                        <input class="hidden" id="playlist" name="playlist" value={playlist.id}/>
-                        <button class="border w-full ml-auto cursor-pointer bg-black rounded-full px-4 py-2">
-                            <p class="text-neutral-300 truncate">{playlist.snippet.title}</p>
-                        </button>
-                    </form>
-                    {/each}
-                </div>
-            </div>
-        </div>
-    </div> -->
-    
     {#if playlists.length == 0}
         <div class="absolute left-0 right-0 top-0 bottom-0 h-screen w-screen z-10 text-neutral-300" >
             <div class="cursor-default h-fit mx-auto my-auto absolute left-0 right-0 top-0 bottom-0 text-xl flex flex-col gap-5 px-12">
@@ -298,44 +282,78 @@
                 <p class="text-2xl">If you have a Spotify account, I would start <span><a href="https://www.tunemymusic.com/transfer/spotify-to-youtube" target="_blank" class="text-emerald-500 underline">here.</a></span></p>
             </div>
         </div>
-       
     {/if}
     
     <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4  {playlists.length == 0 ? "hidden" : ""}"> 
         <div class="flex flex-col gap-4 absolute bottom-0 z-30 py-5 bg-black">
             {#if selectedTrack != undefined}
-            <p class="text-neutral-300 text-lg px-12 truncate font-base  z-40 bg-black w-screen font-sans">{selectedTrack.name}</p>
+            <p class="text-neutral-300 text-lg px-12 truncate font-base  z-40 bg-black w-screen font-sans {appStateName != "Video" && carMode == true ? "hidden" : ""}">{selectedTrack.name}</p>
             {/if}
-        <div class="flex flex-row  text-neutral-300 justify-center gap-5 w-screen">
-            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%] duration-1000 from-teal-200 via-rose-400 to-black to-90%" onclick={() => pauseOrPlay()}>
+        
+        
+        {#if carMode == false}
+        <div class="flex flex-row  text-neutral-300 w-screen gap-5 justify-center ">
+            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => pauseOrPlay()}>
                 {#if paused == true}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
                   </svg>
                   {:else if buffering == true}
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin w-full size-14">
                     <path fill-rule="evenodd" d="M19.449 8.448 16.388 11a4.52 4.52 0 0 1 0 2.002l3.061 2.55a8.275 8.275 0 0 0 0-7.103ZM15.552 19.45 13 16.388a4.52 4.52 0 0 1-2.002 0l-2.55 3.061a8.275 8.275 0 0 0 7.103 0ZM4.55 15.552 7.612 13a4.52 4.52 0 0 1 0-2.002L4.551 8.45a8.275 8.275 0 0 0 0 7.103ZM8.448 4.55 11 7.612a4.52 4.52 0 0 1 2.002 0l2.55-3.061a8.275 8.275 0 0 0-7.103 0Zm8.657-.86a9.776 9.776 0 0 1 1.79 1.415 9.776 9.776 0 0 1 1.414 1.788 9.764 9.764 0 0 1 0 10.211 9.777 9.777 0 0 1-1.415 1.79 9.777 9.777 0 0 1-1.788 1.414 9.764 9.764 0 0 1-10.212 0 9.776 9.776 0 0 1-1.788-1.415 9.776 9.776 0 0 1-1.415-1.788 9.764 9.764 0 0 1 0-10.212 9.774 9.774 0 0 1 1.415-1.788A9.774 9.774 0 0 1 6.894 3.69a9.764 9.764 0 0 1 10.211 0ZM14.121 9.88a2.985 2.985 0 0 0-1.11-.704 3.015 3.015 0 0 0-2.022 0 2.985 2.985 0 0 0-1.11.704c-.326.325-.56.705-.704 1.11a3.015 3.015 0 0 0 0 2.022c.144.405.378.785.704 1.11.325.326.705.56 1.11.704.652.233 1.37.233 2.022 0a2.985 2.985 0 0 0 1.11-.704c.326-.325.56-.705.704-1.11a3.016 3.016 0 0 0 0-2.022 2.985 2.985 0 0 0-.704-1.11Z" clip-rule="evenodd" />
                   </svg>
                   
                   
                 {:else}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM9 8.25a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75h.75a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75H9Zm5.25 0a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75H15a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75h-.75Z" clip-rule="evenodd" />
                     </svg>
                 {/if}
                 
             </button>
-            <button class=" w-19 rounded-lg px-2 h-8 mt-3 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-60 text-neutral-300 brightness-150 rounded-full bg-conic-180 duration-1000 from-neutral-950 via-rose-700 to-neutral-950 to-90% cursor-pointer" onclick={(manageAppState)}>
+            <button class=" w-19 rounded-lg px-2 h-8 mt-3 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-60 text-neutral-300 brightness-150 rounded-full bg-conic-180 duration-1000 from-neutral-950 via-rose-700 to-neutral-950 to-90% cursor-pointer shrink-0" onclick={(manageAppState)}>
                 <p>{appStateName}</p>
             </button>
             <!-- svelte-ignore a11y_consider_explicit_label -->
-            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%]  duration-1000 from-teal-200 via-rose-400 to-black to-90%" onclick={() => skipToEnd()}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="">
+            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 {carMode ? "fill-red-400 rounded-l-lg bg-rose-950 border-l border-y border-rose-600 w-full " : "rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black"} duration-1000 " onclick={() => skipToEnd()}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full h-full {carMode ? "size-12" : "size-14"}">
                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
                   </svg>
                   
             </button>
         </div>
+        {:else}
+        <div class="flex flex-row  text-neutral-300 w-screen gap-5 justify-between gap-7 saturate-70 ">
+            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""}  brightness-150 size-24 fill-red-400 rounded-r-lg bg-linear-to-r from-rose-900 to-rose-950 border-r border-y border-rose-950 w-full duration-1000 " onclick={() => pauseOrPlay()}>
+                {#if paused == true}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
+                  </svg>
+                  {:else if buffering == true}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin w-full size-14">
+                    <path fill-rule="evenodd" d="M19.449 8.448 16.388 11a4.52 4.52 0 0 1 0 2.002l3.061 2.55a8.275 8.275 0 0 0 0-7.103ZM15.552 19.45 13 16.388a4.52 4.52 0 0 1-2.002 0l-2.55 3.061a8.275 8.275 0 0 0 7.103 0ZM4.55 15.552 7.612 13a4.52 4.52 0 0 1 0-2.002L4.551 8.45a8.275 8.275 0 0 0 0 7.103ZM8.448 4.55 11 7.612a4.52 4.52 0 0 1 2.002 0l2.55-3.061a8.275 8.275 0 0 0-7.103 0Zm8.657-.86a9.776 9.776 0 0 1 1.79 1.415 9.776 9.776 0 0 1 1.414 1.788 9.764 9.764 0 0 1 0 10.211 9.777 9.777 0 0 1-1.415 1.79 9.777 9.777 0 0 1-1.788 1.414 9.764 9.764 0 0 1-10.212 0 9.776 9.776 0 0 1-1.788-1.415 9.776 9.776 0 0 1-1.415-1.788 9.764 9.764 0 0 1 0-10.212 9.774 9.774 0 0 1 1.415-1.788A9.774 9.774 0 0 1 6.894 3.69a9.764 9.764 0 0 1 10.211 0ZM14.121 9.88a2.985 2.985 0 0 0-1.11-.704 3.015 3.015 0 0 0-2.022 0 2.985 2.985 0 0 0-1.11.704c-.326.325-.56.705-.704 1.11a3.015 3.015 0 0 0 0 2.022c.144.405.378.785.704 1.11.325.326.705.56 1.11.704.652.233 1.37.233 2.022 0a2.985 2.985 0 0 0 1.11-.704c.326-.325.56-.705.704-1.11a3.016 3.016 0 0 0 0-2.022 2.985 2.985 0 0 0-.704-1.11Z" clip-rule="evenodd" />
+                  </svg>
+                  
+                  
+                {:else}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM9 8.25a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75h.75a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75H9Zm5.25 0a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75H15a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75h-.75Z" clip-rule="evenodd" />
+                    </svg>
+                {/if}
+                
+            </button>
+            <button class=" w-19 rounded-lg px-2 h-24 {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} saturate-60 text-neutral-300 brightness-150 rounded-full bg-conic-180 duration-1000 from-neutral-950 via-rose-700 to-neutral-950 to-90% cursor-pointer shrink-0" onclick={(manageAppState)}>
+                <p>{appStateName}</p>
+            </button>
+            <!-- svelte-ignore a11y_consider_explicit_label -->
+            <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-24 {carMode ? "fill-red-400 rounded-l-lg bg-linear-to-l from-rose-900 to-rose-950 border-r border-y border-rose-950 w-full " : "rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black"} duration-1000 " onclick={() => skipToEnd()}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
+                  </svg>
+                  
+            </button>
+        </div>
+        {/if}
         
     </div>
     </div>

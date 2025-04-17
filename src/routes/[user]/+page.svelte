@@ -34,6 +34,7 @@
     let appState = $state(State.Video)
 
     function manageAppState(){
+        logoutDropdown = false
         if (appState == 2) {appState = 0}
         else {appState++}
         switch(appState) {

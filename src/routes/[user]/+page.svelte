@@ -234,30 +234,32 @@
         </h2> 
     </div>
 
-    <div class="absolute top-0 mt-96 left-0 right-0 z-20 scale-250 {carMode == true ? "bg-black" : ""} py-12">
+    <div class="absolute h-screen bottom-0 mt-96 left-0 right-0 z-20 overflow-hidden flex flex-col justify-center {carMode == true ? "bg-black" : ""} py-12">
+       <div class="flex flex-row justify-center gap-5">
         {#if carMode == true}
-        <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""}  brightness-150 size-14 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => pauseOrPlay()}>
+        <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-32 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => pauseOrPlay()}>
         {#if paused == true}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-32">
                 <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
             </svg>
         {:else if buffering == true}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin w-full size-14">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin w-full size-32">
                 <path fill-rule="evenodd" d="M19.449 8.448 16.388 11a4.52 4.52 0 0 1 0 2.002l3.061 2.55a8.275 8.275 0 0 0 0-7.103ZM15.552 19.45 13 16.388a4.52 4.52 0 0 1-2.002 0l-2.55 3.061a8.275 8.275 0 0 0 7.103 0ZM4.55 15.552 7.612 13a4.52 4.52 0 0 1 0-2.002L4.551 8.45a8.275 8.275 0 0 0 0 7.103ZM8.448 4.55 11 7.612a4.52 4.52 0 0 1 2.002 0l2.55-3.061a8.275 8.275 0 0 0-7.103 0Zm8.657-.86a9.776 9.776 0 0 1 1.79 1.415 9.776 9.776 0 0 1 1.414 1.788 9.764 9.764 0 0 1 0 10.211 9.777 9.777 0 0 1-1.415 1.79 9.777 9.777 0 0 1-1.788 1.414 9.764 9.764 0 0 1-10.212 0 9.776 9.776 0 0 1-1.788-1.415 9.776 9.776 0 0 1-1.415-1.788 9.764 9.764 0 0 1 0-10.212 9.774 9.774 0 0 1 1.415-1.788A9.774 9.774 0 0 1 6.894 3.69a9.764 9.764 0 0 1 10.211 0ZM14.121 9.88a2.985 2.985 0 0 0-1.11-.704 3.015 3.015 0 0 0-2.022 0 2.985 2.985 0 0 0-1.11.704c-.326.325-.56.705-.704 1.11a3.015 3.015 0 0 0 0 2.022c.144.405.378.785.704 1.11.325.326.705.56 1.11.704.652.233 1.37.233 2.022 0a2.985 2.985 0 0 0 1.11-.704c.326-.325.56-.705.704-1.11a3.016 3.016 0 0 0 0-2.022 2.985 2.985 0 0 0-.704-1.11Z" clip-rule="evenodd" />
             </svg>   
         {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14"> 
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-32"> 
                 <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM9 8.25a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75h.75a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75H9Zm5.25 0a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75H15a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75h-.75Z" clip-rule="evenodd" />
             </svg>
         {/if}
         </button>
         <!-- svelte-ignore a11y_consider_explicit_label -->
-        <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => skipToEnd()}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
+        <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-32 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => skipToEnd()}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-32">
                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
                 </svg>    
         </button>
     {/if}
+       </div>
     </div>
 
     <div class="h-10/12 w-screen pb-10 overflow-scroll absolute bg-black z-20 duration-400 {appState != State.Playlists ? "opacity-0 pointer-events-none" : ""} "   >
@@ -305,25 +307,24 @@
         </div>
     {/if}
     
-    <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4  {playlists.length == 0 ? "hidden" : ""}"> 
+    <div class=" flex flex-col items-center z-30 bg-black w-screen pt-4  {playlists.length == 0 ? "hidden" : ""}">
         <div class="flex flex-col gap-4 absolute bottom-0 z-30 py-5 bg-black">
             {#if selectedTrack != undefined}
             <p class="text-neutral-300 text-lg px-12 truncate font-base  z-40 bg-black w-screen font-sans {appStateName != "Video" && carMode == true ? "hidden" : ""}">{selectedTrack.name}</p>
             {/if}
-        
-        
         {#if carMode == false}
         <div class="flex flex-row  text-neutral-300 w-screen gap-5 justify-center ">
             <button class="{paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} brightness-150 size-14 rounded-full bg-radial-[at_50%_50%] from-teal-200 via-rose-400 to-black to-90% border-black duration-1000 " onclick={() => pauseOrPlay()}>
+
                 {#if paused == true}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">
                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
                   </svg>
+
                   {:else if buffering == true}
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class=" animate-spin w-full size-14">
                     <path fill-rule="evenodd" d="M19.449 8.448 16.388 11a4.52 4.52 0 0 1 0 2.002l3.061 2.55a8.275 8.275 0 0 0 0-7.103ZM15.552 19.45 13 16.388a4.52 4.52 0 0 1-2.002 0l-2.55 3.061a8.275 8.275 0 0 0 7.103 0ZM4.55 15.552 7.612 13a4.52 4.52 0 0 1 0-2.002L4.551 8.45a8.275 8.275 0 0 0 0 7.103ZM8.448 4.55 11 7.612a4.52 4.52 0 0 1 2.002 0l2.55-3.061a8.275 8.275 0 0 0-7.103 0Zm8.657-.86a9.776 9.776 0 0 1 1.79 1.415 9.776 9.776 0 0 1 1.414 1.788 9.764 9.764 0 0 1 0 10.211 9.777 9.777 0 0 1-1.415 1.79 9.777 9.777 0 0 1-1.788 1.414 9.764 9.764 0 0 1-10.212 0 9.776 9.776 0 0 1-1.788-1.415 9.776 9.776 0 0 1-1.415-1.788 9.764 9.764 0 0 1 0-10.212 9.774 9.774 0 0 1 1.415-1.788A9.774 9.774 0 0 1 6.894 3.69a9.764 9.764 0 0 1 10.211 0ZM14.121 9.88a2.985 2.985 0 0 0-1.11-.704 3.015 3.015 0 0 0-2.022 0 2.985 2.985 0 0 0-1.11.704c-.326.325-.56.705-.704 1.11a3.015 3.015 0 0 0 0 2.022c.144.405.378.785.704 1.11.325.326.705.56 1.11.704.652.233 1.37.233 2.022 0a2.985 2.985 0 0 0 1.11-.704c.326-.325.56-.705.704-1.11a3.016 3.016 0 0 0 0-2.022 2.985 2.985 0 0 0-.704-1.11Z" clip-rule="evenodd" />
                   </svg>
-                  
                   
                 {:else}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full size-14">

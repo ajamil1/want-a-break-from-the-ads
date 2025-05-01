@@ -214,7 +214,7 @@
 
 <div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
     <div class="top-0 left-0 right-0 m-4 flex flex-col justify-center items-center w-full">
-        <button onclick={toggleLogoutDropdown} class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl flex flex-col items-center z-50 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
+        <button onclick={toggleLogoutDropdown} class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl sm:w-52 sm:mx-auto flex flex-col items-center z-50 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 z-40 bg-rose-950 border-rose-600 text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
             <p><span class="mr-1"></span>Settings</p>
             <a href="/" class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-22.5 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
                 <p>Logout</p>
@@ -222,7 +222,7 @@
         </button>
 
         <h2 class=" {appStateName != "Video" ? "opacity-0 pointer-events-none duration-100" : "opacity-100  duration-1000"} rounded-xl flex flex-col items-center z-40 absolute {paused ? "hue-rotate-[0rad]" : "hue-rotate-[4.6rad]"} {buffering && paused || buffering ? "hue-rotate-[7rad]" : ""} border border-2 border-black z-40 bg-black text-neutral-200 px-4 py-2 rounded-xl top-0 left-0 right-0 m-4 cursor-pointer saturate-50">
-            <button onclick={toggleCarMode} class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-10 "} border border-2 w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
+            <button onclick={toggleCarMode} class=" {logoutDropdown == false ? "pointer-events-none cursor-default opacity-0 mt-8 " : "opacity-100 cursor-pointer mt-10 "} border border-2 sm:w-52 sm:mx-auto w-full duration-100 z-40 absolute bg-rose-950 border-rose-600 text-neutral-200 py-2 rounded-xl">
                 <div class="flex flex-row justify-center gap-3">
                     <p>Car Mode: </p>
                     <div class="flex flex-row gap-2 text-neutral-500">

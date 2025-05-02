@@ -78,5 +78,5 @@ export async function GET({ url, cookies }) {
             console.error('Error handling user:', e);
         }
 
-        throw redirect(302, '/' + userInfo.items[0].id);
+        throw redirect(302, '/user/' + userInfo.items[0].id);
 }

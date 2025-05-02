@@ -106,7 +106,7 @@ export const actions = {
 export const load: Load = async ({ locals, url, cookies }) => {
   let auth
   let title
-  const userID = url.pathname.split('/').slice(0).join('/').slice(1)
+  const userID = url.pathname.split('/').slice(1).join('/').slice(5)
   const cookie = cookies.get('userId');
   if (cookie != userID) {
     console.log("ID MISMATCH: " + cookie + " != " + userID);

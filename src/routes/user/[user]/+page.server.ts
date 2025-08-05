@@ -72,6 +72,7 @@ async function getUserPlaylists(accessToken: string, index?: number){
   });
 
 
+
   if (!response.ok) {
     return json({ error: 'Failed to fetch playlists' }, { status: response.status });
   }
@@ -91,7 +92,7 @@ async function getUserPlaylists(accessToken: string, index?: number){
 
 export const actions = {
   setPlaylist: async ({ request, url }) => {
-    const userID = url.pathname.split('/').slice(0).join('/').slice(1)
+    const userID = url.pathname.split('/').slice(0).join('/').slice(6)
     const user = await prisma.user.findUnique({
       where: { id: userID },  // Check if a user with this id exists
     });

@@ -45,7 +45,7 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="backdrop-blur-md bg-black/50 absolute w-screen px-4 z-40 {addItem == true
+		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full px-7 z-40 {addItem == true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>
@@ -61,7 +61,7 @@
 			<input
 				name="name"
 				id="name"
-				class="bg-black flex flex-row transition-all duration-600 flex py-3 px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mx-auto mt-60 text-neutral-100 text-3xl"
+				class="bg-black flex flex-row transition-all duration-600 flex py-3 w-full px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mt-60 text-neutral-100 text-3xl"
 				placeholder="Enter Item Name"
 			/>
 		</form>

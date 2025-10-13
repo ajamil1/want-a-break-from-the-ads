@@ -4,7 +4,6 @@
 	import { invalidateAll } from '$app/navigation';
 	let { data } = $props();
 	let deletedItem = $state();
-
 	let addItem = $state(false);
 	let groceries = $state(data.groceries);
 	$effect(() => {
@@ -14,7 +13,7 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="absolute backdrop-blur-md bg-black/50 w-full h-full left-0 top-0 z-30 {addItem == true
+		class="absolute backdrop-blur-md bg-black/50 left-0 right-0 top-0 px-4 z-30 {addItem == true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>

@@ -1,13 +1,82 @@
-<div class=" w-full h-screen bg-black place-content-center text-center max-h-screen overflow-hidden">
-    <div class="absolute left-0 right-0 top-0 bottom-0 h-screen w-screen z-50 flex flex-col " >
-        <button onclick={ () => window.location.href = '/auth'} class="cursor-pointer hover:bg-neutral-300 hover:text-black transition-all h-fit max-w-32 mx-auto my-auto absolute left-0 right-0 top-0 bottom-0 border rounded-full py-4 px-2 text-xl border border-neutral-500 bg-neutral-950 text-neutral-300">
-            Login
-        </button>
-        <button onclick={ () => window.location.href = '/privacy'} class=" cursor-pointer hover:text-blue-800 transition-all h-fit max-w-32 mx-auto my-auto absolute left-0 right-0 top-26 bottom-0 text-sm text-neutral-600">
-            Privacy Policy
-        </button>
-        <button onclick={ () => window.location.href = '/tos'} class=" cursor-pointer hover:text-blue-800 transition-all h-fit max-w-32 mx-auto my-auto absolute left-0 right-0 top-39 bottom-0 text-sm text-neutral-600">
-            Terms of Service
-        </button>
-    </div> 
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	let { data } = $props();
+
+	let addItem = $state(false);
+	let groceries = $state(data.groceries);
+	$effect(() => {
+		groceries = data.groceries;
+	});
+</script>
+
+<div class=" h-full bg-black overflow-hidden">
+	<div
+		class="absolute backdrop-blur-md bg-black/50 w-screen h-screen left-0 top-0 z-30 {addItem ==
+		true
+			? 'opacity-100'
+			: 'hidden opacity-0'}"
+	>
+		<form
+			action="?/addItem"
+			use:enhance={() => {
+				addItem = false;
+			}}
+			method="POST"
+		>
+			<input type="submit" hidden />
+			<input
+				name="name"
+				id="name"
+				class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mx-auto mt-60 text-neutral-100 text-3xl"
+				placeholder="Enter Item Name"
+			/>
+		</form>
+	</div>
+	<div class="h-full w-screen bg-black pb-10 overflow-scroll absolute z-20 duration-400">
+		{#each groceries as item}
+			<form
+				use:enhance
+				method="POST"
+				class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-emerald-500/15 border-emerald-500 truncate transition-all duration-200"
+				action="?/deleteItem"
+			>
+            <input value={item.name} name="name" id="name" hidden/>
+				<button
+					type="submit"
+					onclick={() => console.log(item.name)}
+					class="cursor-pointer flex flex-row items-center gap-1 w-full"
+				>
+					<div
+						class=" relative flex flex-row text-left w-screen truncate text-ellipsis cursor-pointer"
+					>
+						<p class="text-emerald-500 text-2xl cursor-pointer w-full truncate">
+							{item.name}
+						</p>
+					</div>
+				</button>
+			</form>
+		{/each}
+		<form
+			class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 border-dashed bg-rose-500/15 border-rose-500 truncate transition-all duration-200"
+			action="?/addItem"
+		>
+			<button
+				onclick={() => (addItem = true)}
+				class="cursor-pointer flex flex-row items-center gap-1 w-full"
+			>
+				<div
+					class=" relative flex flex-row text-center w-screen truncate text-ellipsis cursor-pointer"
+				>
+					<div
+						class="text-rose-500 text-2xl justify-center font-base cursor-pointer w-full truncate flex flex-row gap-4"
+					>
+						<p>Add Item</p>
+						<p>+</p>
+					</div>
+				</div>
+			</button>
+		</form>
+	</div>
 </div>

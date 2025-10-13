@@ -14,15 +14,14 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="absolute backdrop-blur-md bg-black/50 w-screen h-screen left-0 top-0 z-30 {addItem ==
-		true
+		class="absolute backdrop-blur-md bg-black/50 w-full h-full left-0 top-0 z-30 {addItem == true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>
 		<form
 			action="?/addItem"
 			use:enhance={() => {
-                deletedItem = null
+				deletedItem = null;
 				addItem = false;
 			}}
 			method="POST"
@@ -40,10 +39,10 @@
 		{#each groceries as item}
 			<form
 				use:enhance={() => {
-					console.log("ITEM: " +  deletedItem);
+					console.log('ITEM: ' + deletedItem);
 					return async ({ result }) => {
-                        deletedItem = result.data.item
-                        console.log(result.data.item)
+						deletedItem = result.data.item;
+						console.log(result.data.item);
 						setTimeout(() => {
 							groceries = result.data.groceries;
 						}, 500);
@@ -51,8 +50,8 @@
 				}}
 				method="POST"
 				class="{item.name == deletedItem
-					? 'hue-rotate-180 opacity-0 duration-500 '
-					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-emerald-500/15 border-emerald-500 truncate "
+					? 'hue-rotate-180 opacity-0 duration-600 '
+					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-emerald-500/15 border-emerald-500 truncate"
 				action="?/deleteItem"
 			>
 				<input value={item.name} name="name" id="name" hidden />

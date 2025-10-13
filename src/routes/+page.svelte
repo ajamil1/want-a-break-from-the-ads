@@ -45,7 +45,7 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full px-7 z-40 {addItem == true
+		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full h-full px-4 z-40 {addItem == true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>
@@ -61,7 +61,7 @@
 			<input
 				name="name"
 				id="name"
-				class="bg-black flex flex-row transition-all duration-600 flex py-3 w-full px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mt-60 text-neutral-100 text-3xl"
+				class="capitalize bg-black flex flex-row transition-all duration-600 flex py-3 w-full px-4 rounded-2xl cursor-pointer border-2 bg-cyan-500/15 border-cyan-200 truncate transition-all duration-200 mt-60 text-cyan-100 text-3xl"
 				placeholder="Enter Item Name"
 			/>
 		</form>
@@ -82,7 +82,7 @@
 				method="POST"
 				class="{item.name == deletedItem
 					? 'hue-rotate-180 opacity-0 duration-600 '
-					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-emerald-500/15 border-emerald-500 truncate"
+					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t from-cyan-900/50 to-cyan-200/70 border-cyan-300/50 truncate"
 				action="?/deleteItem"
 			>
 				<input value={item.name} name="name" id="name" hidden />
@@ -94,7 +94,7 @@
 					<div
 						class=" relative flex flex-row text-left w-screen truncate text-ellipsis cursor-pointer"
 					>
-						<p class="text-emerald-500 text-2xl cursor-pointer w-full truncate">
+						<p class="capitalize text-cyan-100 text-2xl cursor-pointer w-full truncate">
 							{item.name}
 						</p>
 					</div>
@@ -102,7 +102,7 @@
 			</form>
 		{/each}
 		<form
-			class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 border-dashed bg-rose-500/15 border-rose-500 truncate transition-all duration-200"
+			class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-white border-black truncate transition-all duration-200"
 			action="?/addItem"
 		>
 			<button
@@ -113,7 +113,7 @@
 					class=" relative flex flex-row text-center w-screen truncate text-ellipsis cursor-pointer"
 				>
 					<div
-						class="text-rose-500 text-2xl justify-center font-base cursor-pointer w-full truncate flex flex-row gap-4"
+						class="text-black text-2xl justify-center font-base cursor-pointer w-full truncate flex flex-row gap-4"
 					>
 						<p>Add Item</p>
 						<p>+</p>

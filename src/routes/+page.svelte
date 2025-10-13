@@ -1,27 +1,41 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 	let deletedItem = $state();
 	let addItem = $state(false);
 	let groceries = $state(data.groceries);
+	let found = $state(false);
 
-	document.addEventListener('gesturestart', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = 0.99;
-	});
+	onMount(() => {
+		console.log("test")
+		while ((found == false)) {
+			try {
+				console.log(found)
+				document.addEventListener('gesturestart', function (e) {
+					e.preventDefault();
+					// special hack to prevent zoom-to-tabs gesture in safari
+					document.body.style.zoom = '0.99';
+				});
 
-	document.addEventListener('gesturechange', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = 0.99;
-	});
+				document.addEventListener('gesturechange', function (e) {
+					e.preventDefault();
+					// special hack to prevent zoom-to-tabs gesture in safari
+					document.body.style.zoom = '0.99';
+				});
 
-	document.addEventListener('gestureend', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = 0.99;
+				document.addEventListener('gestureend', function (e) {
+					e.preventDefault();
+					// special hack to prevent zoom-to-tabs gesture in safari
+					document.body.style.zoom = '0.99';
+				});
+				found = true
+				
+			} catch (error) {
+				console.log(error)
+			}
+		}
 	});
 
 	$effect(() => {

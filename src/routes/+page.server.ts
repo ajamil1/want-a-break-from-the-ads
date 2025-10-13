@@ -6,30 +6,31 @@ dotenv.config();
 
 export const actions = {
     deleteItem: async ({ request }) => {
+        const formData = await request.formData();
+        const item = formData.get('name');
         try {
-            const formData = await request.formData();
-            const item = formData.get('name');
             await prisma.item.delete({
                 where: { name: item },  // Check if a item with this name exists
             });
         } catch (e) {
             console.log(e)
         }
+        console.log("Deleted Item: " + item)
 
         const groceries = await prisma.item.findMany()
-        return { groceries };
+        return { groceries, item: item };
     },
     addItem: async ({ request }) => {
-        console.log("Enter")
+        const formData = await request.formData();
+        const item = formData.get('name');
         try {
-            const formData = await request.formData();
-            const item = formData.get('name');
             await prisma.item.create({
                 data: { name: item },  // Check if a item with this name exists
             });
         } catch (e) {
             console.log(e)
         }
+        console.log("Added Item: " + item)
         const groceries = await prisma.item.findMany()
         return { groceries };
     },

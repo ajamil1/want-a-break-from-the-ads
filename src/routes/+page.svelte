@@ -1,11 +1,29 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+
 	let { data } = $props();
 	let deletedItem = $state();
 	let addItem = $state(false);
 	let groceries = $state(data.groceries);
+
+	document.addEventListener('gesturestart', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = 0.99;
+	});
+
+	document.addEventListener('gesturechange', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = 0.99;
+	});
+
+	document.addEventListener('gestureend', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = 0.99;
+	});
+
 	$effect(() => {
 		groceries = data.groceries;
 	});
@@ -13,7 +31,7 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="absolute backdrop-blur-md bg-black/50 left-0 right-0 top-0 px-4 z-30 {addItem == true
+		class="backdrop-blur-md bg-black/50 absolute w-screen px-4 z-40 {addItem == true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>
@@ -29,7 +47,7 @@
 			<input
 				name="name"
 				id="name"
-				class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mx-auto mt-60 text-neutral-100 text-3xl"
+				class="bg-black flex flex-row transition-all duration-600 flex py-3 px-4 rounded-2xl cursor-pointer border-2 bg-neutral-500/15 border-neutral-500 truncate transition-all duration-200 mx-auto mt-60 text-neutral-100 text-3xl"
 				placeholder="Enter Item Name"
 			/>
 		</form>

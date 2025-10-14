@@ -9,10 +9,10 @@
 	let found = $state(false);
 
 	onMount(() => {
-		console.log("test")
-		while ((found == false)) {
+		console.log('test');
+		while (found == false) {
 			try {
-				console.log(found)
+				console.log(found);
 				document.addEventListener('gesturestart', function (e) {
 					e.preventDefault();
 					// special hack to prevent zoom-to-tabs gesture in safari
@@ -30,10 +30,9 @@
 					// special hack to prevent zoom-to-tabs gesture in safari
 					document.body.style.zoom = '0.99';
 				});
-				found = true
-				
+				found = true;
 			} catch (error) {
-				console.log(error)
+				console.log(error);
 			}
 		}
 	});
@@ -45,7 +44,8 @@
 
 <div class="w-full h-full bg-black overflow-hidden">
 	<div
-		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full h-full px-4 z-40 {addItem == true
+		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full h-full px-4 z-40 {addItem ==
+		true
 			? 'opacity-100'
 			: 'hidden opacity-0'}"
 	>
@@ -67,6 +67,24 @@
 		</form>
 	</div>
 	<div class="h-full w-screen bg-black pb-10 overflow-scroll absolute z-20 duration-400">
+		<form
+			class="bg-black w-screen sticky top-0 flex flex-row transition-all duration-600 z-50 flex py-3 px-4 mx-auto cursor-pointer bg-neutral-950/50 backdrop-blur-sm truncate transition-all duration-200"
+			action="?/addItem"
+		>
+			<div
+				class="cursor-pointer flex flex-row items-center overflow-hidden w-full"
+			>
+				<div
+					class=" relative flex flex-row text-center truncate text-ellipsis cursor-pointer w-full"
+				>
+					<div
+						class="text-neutral-300 text-2xl justify-center font-base cursor-pointer truncate flex flex-row gap-4 w-full z-10"
+					>
+						<p>Jamil Family Groceries</p>
+					</div>
+				</div>
+			</div>
+		</form>
 		{#each groceries as item}
 			<form
 				use:enhance={() => {
@@ -76,12 +94,12 @@
 						console.log(result.data.item);
 						setTimeout(() => {
 							groceries = result.data.groceries;
-						}, 500);
+						}, 400);
 					};
 				}}
 				method="POST"
 				class="{item.name == deletedItem
-					? 'hue-rotate-180 opacity-0 duration-600 '
+					? 'hue-rotate-180 opacity-0 duration-300 '
 					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t from-cyan-900/50 to-cyan-200/70 border-cyan-300/50 truncate"
 				action="?/deleteItem"
 			>
@@ -94,32 +112,34 @@
 					<div
 						class=" relative flex flex-row text-left w-screen truncate text-ellipsis cursor-pointer"
 					>
-						<p class="capitalize text-cyan-100 text-2xl cursor-pointer w-full truncate">
+						<p class="capitalize text-cyan-100 text-xl cursor-pointer w-full truncate">
 							{item.name}
 						</p>
 					</div>
 				</button>
 			</form>
 		{/each}
-		<form
-			class="bg-black flex flex-row transition-all duration-600 flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-white border-black truncate transition-all duration-200"
-			action="?/addItem"
+	</div>
+	<form
+		class="bg-black w-screen absolute bottom-0 flex flex-row transition-all duration-600 z-50 flex py-3 px-4 mx-auto cursor-pointer bg-neutral-950/50 backdrop-blur-sm truncate transition-all duration-200"
+		action="?/addItem"
+	>
+		<button
+			onclick={() => (addItem = !addItem)}
+			class="cursor-pointer flex flex-row items-center overflow-hidden w-full"
 		>
-			<button
-				onclick={() => (addItem = true)}
-				class="cursor-pointer flex flex-row items-center gap-1 w-full"
-			>
+			<div class=" relative flex flex-row text-center truncate text-ellipsis cursor-pointer w-full">
 				<div
-					class=" relative flex flex-row text-center w-screen truncate text-ellipsis cursor-pointer"
+					class="text-neutral-300 text-2xl justify-center font-base cursor-pointer truncate flex flex-row gap-4 w-full z-10"
 				>
-					<div
-						class="text-black text-2xl justify-center font-base cursor-pointer w-full truncate flex flex-row gap-4"
-					>
+					{#if addItem != true}
 						<p>Add Item</p>
 						<p>+</p>
-					</div>
+					{:else}
+						<p>Close</p>
+					{/if}
 				</div>
-			</button>
-		</form>
-	</div>
+			</div>
+		</button>
+	</form>
 </div>

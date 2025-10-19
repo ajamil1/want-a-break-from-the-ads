@@ -7,6 +7,8 @@
 	let addItem = $state(false);
 	let groceries = $state(data.groceries);
 	let found = $state(false);
+	let focus = $state()
+	let count: any = $state(0)
 
 	onMount(() => {
 		console.log('test');
@@ -94,19 +96,29 @@
 						console.log(result.data.item);
 						setTimeout(() => {
 							groceries = result.data.groceries;
+							focus = null
+							count = 0
 						}, 400);
+						
 					};
 				}}
 				method="POST"
 				class="{item.name == deletedItem
 					? 'hue-rotate-180 opacity-0 duration-300 '
-					: 'opacity-100'}  bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t from-cyan-900/50 to-cyan-200/70 border-cyan-300/50 truncate"
+					: 'opacity-100'} {focus != null && focus != item ? " brightness-50 " : ""} bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t  {focus == item ? "from-rose-900/50 to-rose-200/70 border-rose-300/50 " : "from-cyan-900/50 to-cyan-200/70 border-cyan-300/50"} truncate"
 				action="?/deleteItem"
 			>
 				<input value={item.name} name="name" id="name" hidden />
 				<button
-					type="submit"
-					onclick={() => console.log(item.name)}
+					type="{focus == item && count >= 2 ? "submit" : "button"}"
+					onclick={() => {
+						if (focus != item) {
+							count = 0
+						}
+						focus = item
+						count++
+						console.log(count)
+					}}
 					class="cursor-pointer flex flex-row items-center gap-1 w-full"
 				>
 					<div

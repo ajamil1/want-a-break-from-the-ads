@@ -7,11 +7,10 @@
 	let addItem = $state(false);
 	let groceries = $state(data.groceries);
 	let found = $state(false);
-	let focus = $state()
-	let count: any = $state(0)
+	let focus = $state();
+	let count: any = $state(0);
 
 	onMount(() => {
-		console.log('test');
 		while (found == false) {
 			try {
 				console.log(found);
@@ -44,7 +43,7 @@
 	});
 </script>
 
-<div class="w-full h-full bg-black overflow-hidden">
+<div id="background" class="w-full h-full bg-black overflow-hidden">
 	<div
 		class="backdrop-blur-md bg-black/50 absolute right-0 left-0 w-full h-full px-4 z-40 {addItem ==
 		true
@@ -61,6 +60,7 @@
 		>
 			<input type="submit" hidden />
 			<input
+				
 				name="name"
 				id="name"
 				class="capitalize bg-black flex flex-row transition-all duration-600 flex py-3 w-full px-4 rounded-2xl cursor-pointer border-2 bg-cyan-500/15 border-cyan-200 truncate transition-all duration-200 mt-60 text-cyan-100 text-3xl"
@@ -73,9 +73,7 @@
 			class="bg-black w-screen sticky top-0 flex flex-row transition-all duration-600 z-50 flex py-3 px-4 mx-auto cursor-pointer bg-neutral-950/50 backdrop-blur-sm truncate transition-all duration-200"
 			action="?/addItem"
 		>
-			<div
-				class="cursor-pointer flex flex-row items-center overflow-hidden w-full"
-			>
+			<div class="cursor-pointer flex flex-row items-center overflow-hidden w-full">
 				<div
 					class=" relative flex flex-row text-center truncate text-ellipsis cursor-pointer w-full"
 				>
@@ -96,35 +94,46 @@
 						console.log(result.data.item);
 						setTimeout(() => {
 							groceries = result.data.groceries;
-							focus = null
-							count = 0
+							focus = null;
+							count = 0;
 						}, 400);
-						
 					};
 				}}
 				method="POST"
+				style="filter: hue-rotate({Math.floor(Math.random() * (360 - -360 + 1)) + -360}deg)"
 				class="{item.name == deletedItem
 					? 'hue-rotate-180 opacity-0 duration-300 '
-					: 'opacity-100'} {focus != null && focus != item ? " brightness-50 " : ""} bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t  {focus == item ? "from-rose-900/50 to-rose-200/70 border-rose-300/50 " : "from-cyan-900/50 to-cyan-200/70 border-cyan-300/50"} truncate"
+					: 'opacity-100'} {focus != null && focus != item
+					? '  '
+					: ''} bg-black flex flex-row flex mx-3 sm:w-9/12 max-w-150 sm:mx-auto my-3 py-3 px-4 rounded-2xl cursor-pointer border-2 bg-linear-to-t {focus ==
+				item
+					? 'from-rose-900/50 to-rose-200/70 border-rose-300/50 '
+					: 'from-cyan-900/50 to-cyan-200/70 border-cyan-300/50'} truncate"
 				action="?/deleteItem"
 			>
 				<input value={item.name} name="name" id="name" hidden />
 				<button
-					type="{focus == item && count >= 2 ? "submit" : "button"}"
+					type={focus == item && count >= 2 ? 'submit' : 'button'}
 					onclick={() => {
 						if (focus != item) {
-							count = 0
+							count = 0;
 						}
-						focus = item
-						count++
-						console.log(count)
+						focus = item;
+						count++;
+						setTimeout(() => {
+							focus = null;
+						}, 400);
 					}}
 					class="cursor-pointer flex flex-row items-center gap-1 w-full"
 				>
 					<div
 						class=" relative flex flex-row text-left w-screen truncate text-ellipsis cursor-pointer"
 					>
-						<p class="capitalize text-cyan-100 text-xl cursor-pointer w-full truncate">
+						<p
+							class="capitalize {focus == item
+								? 'text-rose-100'
+								: 'text-cyan-100'} text-xl cursor-pointer w-full truncate"
+						>
 							{item.name}
 						</p>
 					</div>
